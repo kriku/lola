@@ -38,7 +38,10 @@ gulp.task 'js-modules', ->
 		return
 	.pipe gulp.dest 'js/'
 
+gulp.task 'watch-modules', ->
+	gulp.watch 'js/modules/**/*.js', ['js-modules', 'update']
+
 gulp.task 'bootstrap-watch', ->
 	gulp.watch 'node_modules/bootstrap/less/**/*.less', ['bootstrap-less', 'update']
 
-gulp.task 'default', ['copy', 'bootstrap-less', 'bootstrap-watch', 'watch-html', 'connect']
+gulp.task 'default', ['copy', 'bootstrap-less', 'bootstrap-watch', 'watch-html', 'js-modules', 'watch-modules', 'connect']

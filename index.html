@@ -1,11 +1,95 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Детям с любовь</title>
-  <link rel="stylesheet" href="css/bootstrap.css">
+	<meta charset="UTF-8">
+	<title>Детям с любовь</title>
+	<link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
-  <script src="js/knockout.js"></script>
+	<input type="text" data-bind="value: apiUrl" style="width: 600px;">
+	<button data-bind="click: process">send</button>
+	<input type="text" data-bind="value: advansedUrl">
+	<button data-bind="click: process2">send2</button>
+	<button data-bind="click: getAlbums">getAlbums</button>
+	<div data-bind="foreach: albums">
+		<img data-bind="attr: { src: source }">
+	</div>
+	<pre data-bind="text: answer"></pre>
+	<script src="js/Ajax.min.js"></script>
+	<script src="js/knockout.js"></script>
+
+	<script>
+	// (function () {
+
+		var ajax = Ajax();
+		var ajax2 = Ajax();
+		var baseApiUrl = 'http://graph.facebook.com/DetamSLubovu';
+		var albumsQuery = '?fields=albums{photos}'
+
+		var Model = function () {
+			var that = this;
+			this.answer = ko.observable();
+			this.apiUrl = ko.observable(baseApiUrl);
+			this.advansedUrl = ko.observable();
+			this.dataObject = {};
+			this.albums = ko.observableArray();
+			this.action = 'start';
+
+			this.process = function () {
+				ajax.open('GET', that.apiUrl(), true);
+				ajax.send();
+			}
+
+			this.process2 = function () {
+				ajax.open('GET', that.apiUrl() + that.advansedUrl(), true);
+				ajax.send();
+			}
+
+			this.getAlbums = function () {
+				ajax2.open('GET', baseApiUrl + albumsQuery, true);
+				ajax2.send();
+			}
+
+			this.update = function (data) {
+				that.answer(data);
+				that.dataObject = JSON.parse(data);
+				console.log(that.dataObject);
+			}
+
+			this.pushAlbums = function (albums) {
+				if (albums) {
+					var i, len = albums.data.length, j, lenAlbum;
+
+					for (i=0; i<len; i++) {
+						lenAlbum = albums.data[i].photos.data.length;
+						for (j=0; j<lenAlbum; j++) {
+							this.albums.push(albums.data[i].photos.data[j]);
+						}
+					}
+				}
+			}
+
+			ajax.onreadystatechange = function () {
+				if (ajax.readyState==4 && ajax.status==200) {
+					that.update(ajax.responseText);
+				}
+			}
+
+			ajax2.onreadystatechange = function () {
+				if (ajax2.readyState==4 && ajax2.status==200) {
+					var data = JSON.parse(ajax2.responseText);
+					that.pushAlbums(data.albums);
+				}
+			}
+
+		}
+
+		var model = new Model();
+
+		ko.applyBindings(model);
+
+	// })();
+	</script>
+
 </body>
 </html>
