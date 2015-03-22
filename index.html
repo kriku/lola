@@ -69,6 +69,10 @@
 				}
 			}
 
+			this.albums.prototype.sourceComp = ko.computed(function (index) {
+				if (this.albums[index])
+			});
+
 			ajax.onreadystatechange = function () {
 				if (ajax.readyState==4 && ajax.status==200) {
 					that.update(ajax.responseText);
@@ -87,7 +91,6 @@
 		var model = new Model();
 
 		ko.applyBindings(model);
-
 	// })();
 	</script>
 

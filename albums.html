@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Детям с любовь</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+  <div data-bind="foreach: albums">
+    <img data-bind="attr: { src: $root.loadingImg(source, $index) }">
+  </div>
+  <script src="js/Ajax.min.js"></script>
+  <script src="js/knockout.js"></script>
+
+  <script>
+  // (function () {
+
+    var baseApiUrl = 'http://graph.facebook.com/DetamSLubovu';
+    var albumsQuery = '?fields=albums{photos}'
+
+    var Model = function () {
+      var that = this;
+      this.albums = ko.observableArray();
+
+      this.loadingImg = function (src, index) {
+        if (index < 10) return src;
+        return null;
+      };
+
+      this.getAlbums = function () {
+        var ajax = Ajax();
+        ajax.open('GET', baseApiUrl + albumsQuery, true);
+        ajax.send();
+
+        ajax.onreadystatechange = function () {
+          if (ajax.readyState==4 && ajax.status==200) {
+            var data = JSON.parse(ajax.responseText);
+            that.pushAlbums(data.albums);
+          }
+        }
+      }
+
+      this.update = function (data) {
+        that.answer(data);
+        that.dataObject = JSON.parse(data);
+        console.log(that.dataObject);
+      }
+
+      this.pushAlbums = function (albums) {
+        if (albums.data) {
+          var i, len = albums.data.length, j, lenAlbum;
+          for (i=0; i<len; i++) {
+            if (albums.data[i].photos) {
+              lenAlbum = albums.data[i].photos.data.length;
+              for (j=0; j<lenAlbum; j++) {
+                this.albums.push(albums.data[i].photos.data[j]);
+                console.log (i + ' - ' + j);
+              }
+            }
+          }
+        }
+      }
+
+      this.sourceComp = function (index) {
+        if (index < 10) return this.albums()[index].source;
+        return null;
+      };
+
+    }
+
+    var model = new Model();
+
+    ko.applyBindings(model);
+    model.getAlbums();
+  // })();
+  </script>
+
+</body>
+</html>
