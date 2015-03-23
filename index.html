@@ -57,13 +57,14 @@
 			}
 
 			this.pushAlbums = function (albums) {
-				if (albums) {
+				if (albums.data) {
 					var i, len = albums.data.length, j, lenAlbum;
-
 					for (i=0; i<len; i++) {
-						lenAlbum = albums.data[i].photos.data.length;
-						for (j=0; j<lenAlbum; j++) {
-							this.albums.push(albums.data[i].photos.data[j]);
+						if (albums.data[i].photos) {
+							lenAlbum = albums.data[i].photos.data.length;
+							for (j=0; j<lenAlbum; j++) {
+								this.albums.push(albums.data[i].photos.data[j]);
+							}
 						}
 					}
 				}
