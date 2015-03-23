@@ -56,15 +56,15 @@ gulp.task 'watch-html', ->
 	gulp.watch '**/*.html', ['update']
 
 gulp.task 'js-modules', ->
-	gulp.src 'js/modules/**/*.js'
+	gulp.src 'src/modules/**/*.js'
 	.pipe do uglify
-	.pipe rename (path) ->
-		path.basename += '.min'
-		return
+	# .pipe rename (path) ->
+		# path.basename += '.min'
+		# return
 	.pipe gulp.dest 'js/'
 
 gulp.task 'watch-modules', ->
-	gulp.watch 'js/modules/**/*.js', ['js-modules', 'update']
+	gulp.watch 'src/modules/**/*.js', ['js-modules', 'update']
 
 gulp.task 'bootstrap-watch', ->
 	gulp.watch 'node_modules/bootstrap/less/**/*.less', ['bootstrap-less', 'update']
