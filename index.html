@@ -22,7 +22,7 @@
 	// (function () {
 
 		var baseApiUrl = 'http://graph.facebook.com/DetamSLubovu';
-		var albumsQuery = '?fields=albums{photos}'
+		var albumsQuery = '?fields=albums{photos.limit(10)}'
 
 		var Model = function () {
 			var that = this;
@@ -41,8 +41,8 @@
 					if (ajax.readyState==4 && ajax.status==200) {
 						that.update(ajax.responseText);
 					}
-				}
-			}
+				};
+			};
 
 			this.askWith = function () {
 				var ajax = Ajax();
@@ -53,7 +53,7 @@
 						that.update(ajax.responseText);
 					}
 				}
-			}
+			};
 
 			this.getAlbums = function () {
 				var ajax = Ajax();
@@ -65,12 +65,12 @@
 						that.pushAlbums(data.albums);
 					}
 				}
-			}
+			};
 
 			this.update = function (data) {
 				that.answer(data);
 				that.dataObject = JSON.parse(data);
-			}
+			};
 
 			this.pushAlbums = function (albums) {
 				if (albums.data) {
@@ -84,12 +84,9 @@
 						}
 					}
 				}
-			}
+			};
 
-			this.albums.prototype.sourceComp = ko.computed(function (index) {
-
-			});
-		}
+		};
 
 		var model = new Model();
 		ko.applyBindings(model);

@@ -1,5 +1,6 @@
 gulp = require 'gulp'
 less = require 'gulp-less'
+react = require 'gulp-react'
 rename = require 'gulp-rename'
 concat = require 'gulp-concat'
 uglify = require 'gulp-uglify'
@@ -7,6 +8,11 @@ connect = require 'gulp-connect'
 iconfont = require 'gulp-iconfont'
 iconfontCss = require 'gulp-iconfont-css'
 fontName = 'icons';
+
+gulp.task 'react', ->
+	gulp.src 'src/react_modules/**/*.jsx'
+	.pipe do react
+	.pipe gulp.dest 'js/react_modules'
 
 gulp.task 'bootstrap-less', ->
 	gulp.src 'node_modules/bootstrap/less/bootstrap.less'
@@ -46,7 +52,11 @@ gulp.task 'copy-knockout', ->
 	.pipe rename 'knockout.js'
 	.pipe gulp.dest 'js'
 
-gulp.task 'copy', ['copy-knockout']
+gulp.task 'copy-react', ->
+	gulp.src ['node_modules/react/dist/react.min.js', 'node_modules/react/dist/react.js']
+	.pipe gulp.dest 'js'
+
+gulp.task 'copy', ['copy-knockout', 'copy-react']
 
 gulp.task 'update', ->
 	gulp.src '*.html'
@@ -61,10 +71,11 @@ gulp.task 'js-modules', ->
 	# .pipe rename (path) ->
 		# path.basename += '.min'
 		# return
-	.pipe gulp.dest 'js/'
+	.pipe gulp.dest 'js/modules'
 
 gulp.task 'watch-modules', ->
 	gulp.watch 'src/modules/**/*.js', ['js-modules', 'update']
+	gulp.watch 'src/react_modules/**/*.jsx', ['react', 'update']
 
 gulp.task 'bootstrap-watch', ->
 	gulp.watch 'node_modules/bootstrap/less/**/*.less', ['bootstrap-less', 'update']
@@ -72,4 +83,4 @@ gulp.task 'bootstrap-watch', ->
 
 gulp.task 'bootstrap', ['bootstrap-less', 'bootstrap-js']
 gulp.task 'watch', ['bootstrap-watch', 'watch-html', 'watch-modules', 'iconfont-watch']
-gulp.task 'default', ['copy', 'bootstrap', 'js-modules', 'iconfont', 'connect', 'watch']
+gulp.task 'default', ['copy', 'iconfont', 'react', 'bootstrap', 'js-modules', 'connect', 'watch']
