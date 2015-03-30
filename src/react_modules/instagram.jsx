@@ -9,14 +9,13 @@ var Picture = React.createClass({
 	clickHandler: function () {
 		// When the component is clicked, trigger the onClick handler that 
 		// was passed as an attribute when it was constructed:
-		this.props.onClick(this.props.ref);
+		this.props.onClick(this.props.reference);
 	},
 	render: function () {
 		var cls = 'picture ' + (this.props.favorite ? 'favorite' : '');
 		return (
 			<div className={cls} onClick={this.clickHandler}>
 				<img src={this.props.src}/>
-				<span>{this.props.ref}</span>
 			</div>
 		);
 	}
@@ -82,7 +81,7 @@ var PictureList = React.createClass({
 			// Find the id in the pictures array
 			if (pictures[i].id == id) {
 				if (pictures[i].favorite) {
-					// return this.favoriteClick(id);
+					return this.favoriteClick(id);
 				}
 				// Add the picture to the favorites array,
 				// and mark it as a favorite:
@@ -96,12 +95,13 @@ var PictureList = React.createClass({
 	},
 
 	favoriteClick: function (id) {
+		console.log(id);
 		// Find the picture in the favorites array and remove it. After this, 
 		// find the picture in the pictures array and mark it as a non-favorite.
 		var favorites = this.state.favorites,
 			pictures = this.state.pictures;
 		for (var i = 0; i < favorites.length; i++) {
-			// if (favorites[i].ref == id) break;
+			if (favorites[i].id == id) break;
 		}
 		// Remove the picture from favorites array
 		favorites.splice(i, 1);
@@ -118,13 +118,13 @@ var PictureList = React.createClass({
 	render: function () {
 		var self = this;
 		var pictures = this.state.pictures.map(function (p) {
-			return <Picture ref={p.id} src={p.src} favorite={p.favorite} onClick={self.pictureClick} />
+			return <Picture reference={p.id} src={p.src} favorite={p.favorite} onClick={self.pictureClick} />
 		});
 		if(!pictures.length){
 			pictures = <p>Loading images..</p>;
 		}
 		var favorites = this.state.favorites.map(function(p){
-			return <Picture ref={p.id} src={p.src} favorite={true} onClick={self.favoriteClick} />
+			return <Picture reference={p.id} src={p.src} favorite={true} onClick={self.favoriteClick} />
 		});
 		if(!favorites.length){
 			favorites = <p>Click an image to mark it as a favorite.</p>;
@@ -142,5 +142,5 @@ var PictureList = React.createClass({
 
 React.render(
 	<PictureList/>,
-	document.body
+	document.getElementById('example4')
 );

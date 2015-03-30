@@ -1,36 +1,57 @@
-var SetIntervalMixin = {
-  componentWillMount: function() {
-    this.intervals = [];
-  },
-  setInterval: function() {
-    this.intervals.push(setInterval.apply(null, arguments));
-  },
-  componentWillUnmount: function() {
-    this.intervals.map(clearInterval);
-  }
-};
+/** @jsx React.DOM */
 
-var TickTock = React.createClass({displayName: "TickTock",
-  mixins: [SetIntervalMixin], // Use the mixin
-  getInitialState: function() {
-    return {seconds: 0};
-  },
-  componentDidMount: function() {
-    this.setInterval(this.tick, 1000); // Call a method on the mixin
-  },
-  tick: function() {
-    this.setState({seconds: this.state.seconds + 1});
-  },
-  render: function() {
-    return (
-      React.createElement("p", null, 
-        "React has been running for ", this.state.seconds, " seconds."
-      )
-    );
-  }
+// Create a custom component by calling React.createClass.
+
+var TimerExample = React.createClass({displayName: "TimerExample",
+
+    getInitialState: function(){
+
+        // This is called before our render function. The object that is 
+        // returned is assigned to this.state, so we can use it later.
+
+        return { elapsed: 0 };
+    },
+
+    componentDidMount: function(){
+
+        // componentDidMount is called by react when the component 
+        // has been rendered on the page. We can set the interval here:
+
+        this.timer = setInterval(this.tick, 50);
+    },
+
+    componentWillUnmount: function(){
+
+        // This method is called immediately before the component is removed
+        // from the page and destroyed. We can clear the interval here:
+
+        clearInterval(this.timer);
+    },
+
+    tick: function(){
+
+        // This function is called every 50 ms. It updates the 
+        // elapsed counter. Calling setState causes the component to be re-rendered
+
+        this.setState({elapsed: new Date() - this.props.start});
+    },
+
+    render: function() {
+        
+        var elapsed = Math.round(this.state.elapsed / 100);
+
+        // This will give a number with one digit after the decimal dot (xx.x):
+        var seconds = (elapsed / 10).toFixed(1);    
+
+        // Although we return an entire <p> element, react will smartly update
+        // only the changed parts, which contain the seconds variable.
+
+        return React.createElement("p", null, "This example was started ", React.createElement("b", null, seconds, " seconds"), " ago.");
+    }
 });
 
+
 React.render(
-  React.createElement(TickTock, null),
-  document.getElementById('example')
+    React.createElement(TimerExample, {start: Date.now()}),
+    document.getElementById('example')
 );

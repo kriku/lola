@@ -9,14 +9,13 @@ var Picture = React.createClass({displayName: "Picture",
 	clickHandler: function () {
 		// When the component is clicked, trigger the onClick handler that 
 		// was passed as an attribute when it was constructed:
-		this.props.onClick(this.props.ref);
+		this.props.onClick(this.props.reference);
 	},
 	render: function () {
 		var cls = 'picture ' + (this.props.favorite ? 'favorite' : '');
 		return (
 			React.createElement("div", {className: cls, onClick: this.clickHandler}, 
-				React.createElement("img", {src: this.props.src}), 
-				React.createElement("span", null, this.props.ref)
+				React.createElement("img", {src: this.props.src})
 			)
 		);
 	}
@@ -82,7 +81,7 @@ var PictureList = React.createClass({displayName: "PictureList",
 			// Find the id in the pictures array
 			if (pictures[i].id == id) {
 				if (pictures[i].favorite) {
-					// return this.favoriteClick(id);
+					return this.favoriteClick(id);
 				}
 				// Add the picture to the favorites array,
 				// and mark it as a favorite:
@@ -96,12 +95,13 @@ var PictureList = React.createClass({displayName: "PictureList",
 	},
 
 	favoriteClick: function (id) {
+		console.log(id);
 		// Find the picture in the favorites array and remove it. After this, 
 		// find the picture in the pictures array and mark it as a non-favorite.
 		var favorites = this.state.favorites,
 			pictures = this.state.pictures;
 		for (var i = 0; i < favorites.length; i++) {
-			// if (favorites[i].ref == id) break;
+			if (favorites[i].id == id) break;
 		}
 		// Remove the picture from favorites array
 		favorites.splice(i, 1);
@@ -118,13 +118,13 @@ var PictureList = React.createClass({displayName: "PictureList",
 	render: function () {
 		var self = this;
 		var pictures = this.state.pictures.map(function (p) {
-			return React.createElement(Picture, {ref: p.id, src: p.src, favorite: p.favorite, onClick: self.pictureClick})
+			return React.createElement(Picture, {reference: p.id, src: p.src, favorite: p.favorite, onClick: self.pictureClick})
 		});
 		if(!pictures.length){
 			pictures = React.createElement("p", null, "Loading images..");
 		}
 		var favorites = this.state.favorites.map(function(p){
-			return React.createElement(Picture, {ref: p.id, src: p.src, favorite: true, onClick: self.favoriteClick})
+			return React.createElement(Picture, {reference: p.id, src: p.src, favorite: true, onClick: self.favoriteClick})
 		});
 		if(!favorites.length){
 			favorites = React.createElement("p", null, "Click an image to mark it as a favorite.");
@@ -142,5 +142,5 @@ var PictureList = React.createClass({displayName: "PictureList",
 
 React.render(
 	React.createElement(PictureList, null),
-	document.body
+	document.getElementById('example4')
 );

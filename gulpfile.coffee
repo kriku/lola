@@ -47,16 +47,18 @@ gulp.task 'iconfont', ->
 gulp.task 'iconfont-watch', ->
 	gulp.watch 'assets/icons/*.svg', ['iconfont', 'update']
 
+# copy necessary libraries
 gulp.task 'copy-knockout', ->
 	gulp.src 'node_modules/knockout/build/output/knockout-latest.js'
 	.pipe rename 'knockout.js'
 	.pipe gulp.dest 'js'
-
 gulp.task 'copy-react', ->
 	gulp.src ['node_modules/react/dist/react.min.js', 'node_modules/react/dist/react.js']
 	.pipe gulp.dest 'js'
-
-gulp.task 'copy', ['copy-knockout', 'copy-react']
+gulp.task 'copy-es5-shim', ->
+	gulp.src ['node_modules/es5-shim/es5-shim.min.js', 'node_modules/es5-shim/es5-sham.min.js']
+	.pipe gulp.dest 'js'
+gulp.task 'copy', ['copy-knockout', 'copy-react', 'copy-es5-shim']
 
 gulp.task 'update', ->
 	gulp.src '*.html'

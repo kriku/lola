@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>React Facebook Albums demo</title>
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-shim.min.js"></script>
+    <script src="js/es5-shim.min.js"></script>
+    <script src="js/es5-sham.min.js"></script>
+  <![endif]-->
+  <style>
+* {
+    padding:0;
+    margin:0;
+}
+
+html{
+    font:14px normal Arial, sans-serif;
+    color:#626771;
+    background-color:#fff;
+}
+
+body{
+    padding:20px;
+    text-align: center;
+}
+
+h1{
+    font-size: 18px;
+    margin-bottom: 30px;
+    padding-top: 20px;
+}
+
+div.picture{
+    display: inline-block;
+    margin: 5px;
+    cursor:pointer;
+    position: relative;
+}
+
+div.picture.favorite:after{
+    content: '❤';
+    position: absolute;
+    font-size: 80px;
+    line-height: 200px;
+    color: #FF224D;
+    width: 100%;
+    text-align: center;
+    left: 0;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+.pictures, .favorites{
+    white-space: nowrap;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    height: 230px;
+    background-color: #F3F3F3;
+}
+
+.pictures p, .favorites p {
+    padding-top: 100px;
+    font-size: 13px;
+}
+  </style>
+</head>
+<body>
+<div id="example4"></div>
+
+<script src='js/modules/Ajax.js'></script>
+<script src='js/modules/EventUtils.js'></script>
+<script src='js/react.js'></script>
+<script src='js/react_modules/instagram.js'></script>
+<script>
+</script>
+</body>
+</html>
