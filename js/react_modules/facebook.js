@@ -3,7 +3,7 @@
 // In this example we also have two components - a picture and
 // a picture list. The pictures are fetched from Facebook via AJAX.
 
-var Picture = React.createClass({
+var Picture = React.createClass({displayName: "Picture",
 	// This component doesn't hold any state - it simply transforms
 	// whatever was passed as attributes into HTML that represents a picture.
 	clickHandler: function () {
@@ -14,19 +14,34 @@ var Picture = React.createClass({
 	render: function () {
 		var cls = 'picture ' + (this.props.favorite ? 'favorite' : '');
 		return (
-			<div className={cls} onClick={this.clickHandler}>
-				<img src={this.props.src}/>
-			</div>
+			React.createElement("div", {className: cls, onClick: this.clickHandler}, 
+				React.createElement("img", {src: this.props.src})
+			)
 		);
 	}
 });
 
-var PictureList = React.createClass({
+var PictureList = React.createClass({displayName: "PictureList",
 	getInitialState: function () {
 		// The pictures array will be populated via AJAX, and 
 		// the favorites one when the user clicks on an image:
 		return { pictures: [], favorites: [] };
 	},
+
+	getAlbums: function (id) {
+		var self = this;
+		var ajax = Ajax();
+		var url = baseApiUrl + '/albums?fields=id,description';
+		ajax.open('GET', url, true);
+		ajax.setRequestHeader('Content-type', 'json');
+		ajax.send();
+		ajax.onreadystatechange = function () {
+			if (ajax.readyState==4 && ajax.status==200) {
+				var result = JSON.parse(ajax.responseText);
+			}
+		};
+	},
+
 	getPhotos: function (albums) {
 		var result = [];
 		if (albums.data) {
@@ -118,29 +133,29 @@ var PictureList = React.createClass({
 	render: function () {
 		var self = this;
 		var pictures = this.state.pictures.map(function (p) {
-			return <Picture reference={p.id} src={p.src} favorite={p.favorite} onClick={self.pictureClick} />
+			return React.createElement(Picture, {reference: p.id, src: p.src, favorite: p.favorite, onClick: self.pictureClick})
 		});
 		if(!pictures.length){
-			pictures = <p>Loading images..</p>;
+			pictures = React.createElement("p", null, "Loading images..");
 		}
 		var favorites = this.state.favorites.map(function(p){
-			return <Picture reference={p.id} src={p.src} favorite={true} onClick={self.favoriteClick} />
+			return React.createElement(Picture, {reference: p.id, src: p.src, favorite: true, onClick: self.favoriteClick})
 		});
 		if(!favorites.length){
-			favorites = <p>Click an image to mark it as a favorite.</p>;
+			favorites = React.createElement("p", null, "Click an image to mark it as a favorite.");
 		}
 		return (
-			<div>
-				<h1>DetamSLubovu Facebook Pics</h1>
-				<div className="pictures"> {pictures} </div>
-				<h1>Your favorites</h1>
-				<div className="favorites"> {favorites} </div>
-			</div>
+			React.createElement("div", null, 
+				React.createElement("h1", null, "DetamSLubovu Facebook Pics"), 
+				React.createElement("div", {className: "pictures"}, " ", pictures, " "), 
+				React.createElement("h1", null, "Your favorites"), 
+				React.createElement("div", {className: "favorites"}, " ", favorites, " ")
+			)
 		);
 	}
 });
 
 React.render(
-	<PictureList/>,
+	React.createElement(PictureList, null),
 	document.getElementById('example4')
 );
